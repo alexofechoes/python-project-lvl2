@@ -7,7 +7,5 @@ lint:
 test:
 	poetry run pytest
 
-testcoverage:
-	poetry run pytest --cov=gendiff tests
-
-
+test-with-coverage:
+	poetry run pytest --cov=gendiff tests  --cov-report xml
