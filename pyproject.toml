@@ -16,6 +16,7 @@ pytest = "^5.1"
 wemake-python-styleguide = "^0.12.4"
 black = {version = "^18.3-alpha.0",allows-prereleases = true}
 flake8 = "^3.7"
+pytest-cov = "^2.7"
 
 [tool.poetry.scripts]
 gendiff = "gendiff.cli:main"

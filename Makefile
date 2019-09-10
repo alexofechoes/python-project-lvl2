@@ -6,3 +6,8 @@ lint:
 
 test:
 	poetry run pytest
+
+testcoverage:
+	poetry run pytest --cov=gendiff tests
+
+
