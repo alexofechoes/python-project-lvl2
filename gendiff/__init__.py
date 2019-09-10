@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
-from .diff import generate_diff
 
+"""Gendiff base module."""
+from gendiff.diff import generate_diff
 
-__version__ = '0.1.0'
+__all__ = ['generate_diff']

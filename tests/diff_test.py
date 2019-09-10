@@ -1,5 +1,6 @@
-from gendiff.diff import dict_diff
-from gendiff.diff import generate_diff_from_dicts
+# -*- coding:utf-8 -*-
+
+from gendiff.diff import _generate_diff_from_dicts, dict_diff
 
 
 def test_dict_diff():
@@ -18,7 +19,7 @@ def test_dict_diff():
 def test_message_from_diff():
     first = {'host': 'hexlet.io', 'timeout': 50, 'proxy': '123.234.53.22'}
     second = {'timeout': 20, 'verbose': True, 'host': 'hexlet.io'}
-    result = generate_diff_from_dicts(first, second)
+    result = _generate_diff_from_dicts(first, second)
     expected = """{
     host: hexlet.io
   + timeout: 20

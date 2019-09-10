@@ -1,8 +1,11 @@
 # -*- coding:utf-8 -*-
+
+"""Funtions for generate diff."""
 import json
 
 
 def dict_diff(first, second):
+    """Diff between first and second dicts."""
     first_keys = first.keys()
     second_keys = second.keys()
 
@@ -14,11 +17,11 @@ def dict_diff(first, second):
     removed = {key: first[key] for key in remove_keys}
     changed = {
         key: {'old': first[key], 'new': second[key]}
-        for key in common_keys if first[key] != second[key]
+        for key in common_keys
+        if first[key] != second[key]
     }
     unchanged = {
-        key: first[key]
-        for key in common_keys if first[key] == second[key]
+        key: first[key] for key in common_keys if first[key] == second[key]
     }
 
     return {
@@ -36,13 +39,16 @@ def _plain_message(diff):
         message_format.format(symbol=' ', key=key, value=value)
         for key, value in diff['unchanged'].items()
     ]
-    changed_messages = sum([
+    changed_messages = sum(
         [
-            message_format.format(symbol='+', key=key, value=value['new']),
-            message_format.format(symbol='-', key=key, value=value['old'])
-        ]
-        for key, value in diff['changed'].items()
-    ], [])
+            [
+                message_format.format(symbol='+', key=key, value=value['new']),
+                message_format.format(symbol='-', key=key, value=value['old']),
+            ]
+            for key, value in diff['changed'].items()
+        ],
+        [],
+    )
     removed_messages = [
         message_format.format(symbol='-', key=key, value=value)
         for key, value in diff['removed'].items()
@@ -52,23 +58,27 @@ def _plain_message(diff):
         for key, value in diff['added'].items()
     ]
 
-    result = [
+    message = [
         '{',
         *unchanged_messages,
         *changed_messages,
         *removed_messages,
         *added_messages,
-        '}'
+        '}',
     ]
-    return '\n'.join(result)
+    return '\n'.join(message)
 
 
-def generate_diff_from_dicts(first, second):
+def _generate_diff_from_dicts(first, second):
     diff = dict_diff(first, second)
     return _plain_message(diff)
 
 
-def generate_diff(path_to_file1, path_to_file2):
-    first_data = json.load(open(path_to_file1))
-    second_data = json.load(open(path_to_file2))
-    return generate_diff_from_dicts(first_data, second_data)
+def generate_diff(path_to_file1: str, path_to_file2: str):
+    """Generate message different two files."""
+    with open(path_to_file1) as first_file:
+        first_data = json.load(first_file)
+    with open(path_to_file2) as second_file:
+        second_data = json.load(second_file)
+
+    return _generate_diff_from_dicts(first_data, second_data)
