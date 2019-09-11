@@ -18,10 +18,26 @@ def test_dict_diff():
     }
 
 
-def test_message_from_diff(expected_plain):
+def test_json_diff(expected_plain):
     diff = generate_diff(
         'tests/fixtures/before.json',
         'tests/fixtures/after.json',
+    )
+    assert diff.split('\n') == expected_plain
+
+
+def test_yaml_diff(expected_plain):
+    diff = generate_diff(
+        'tests/fixtures/before.yaml',
+        'tests/fixtures/after.yaml',
+    )
+    assert diff.split('\n') == expected_plain
+
+
+def test_json_yaml_diff(expected_plain):
+    diff = generate_diff(
+        'tests/fixtures/before.json',
+        'tests/fixtures/after.yaml',
     )
     assert diff.split('\n') == expected_plain
 

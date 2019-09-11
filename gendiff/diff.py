@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 
 """Funtions for generate diff."""
-import json
+from gendiff import formatters, parsers
 
 
 def dict_diff(first, second):
@@ -32,49 +32,22 @@ def dict_diff(first, second):
     }
 
 
-def _plain_message(diff):
-    message_format = '  {symbol} {key}: {value}'
-
-    unchanged_messages = [
-        message_format.format(symbol=' ', key=key, value=value)
-        for key, value in diff['unchanged'].items()
-    ]
-    changed_messages = sum(
-        [
-            [
-                message_format.format(symbol='+', key=key, value=value['new']),
-                message_format.format(symbol='-', key=key, value=value['old']),
-            ]
-            for key, value in diff['changed'].items()
-        ],
-        [],
-    )
-    removed_messages = [
-        message_format.format(symbol='-', key=key, value=value)
-        for key, value in diff['removed'].items()
-    ]
-    added_messages = [
-        message_format.format(symbol='+', key=key, value=value)
-        for key, value in diff['added'].items()
-    ]
-
-    message = [
-        '{',
-        *unchanged_messages,
-        *changed_messages,
-        *removed_messages,
-        *added_messages,
-        '}',
-    ]
-    return '\n'.join(message)
-
-
 def generate_diff(path_to_file1: str, path_to_file2: str):
     """Generate message different two files."""
     with open(path_to_file1) as first_file:
-        first_data = json.load(first_file)
+        first_data = parsers.parse(
+            _format_data(path_to_file1),
+            first_file.read(),
+        )
     with open(path_to_file2) as second_file:
-        second_data = json.load(second_file)
+        second_data = parsers.parse(
+            _format_data(path_to_file2),
+            second_file.read(),
+        )
 
     diff = dict_diff(first_data, second_data)
-    return _plain_message(diff)
+    return formatters.plain_message(diff)
+
+
+def _format_data(path_to_file):
+    return path_to_file.split('.')[-1]
