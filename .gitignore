@@ -5,6 +5,4 @@
 __pycache__
 *.egg-info
 *.pyc
-after.json
-before.json
 coverage.xml

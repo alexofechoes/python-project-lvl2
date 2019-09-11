@@ -69,11 +69,6 @@ def _plain_message(diff):
     return '\n'.join(message)
 
 
-def _generate_diff_from_dicts(first, second):
-    diff = dict_diff(first, second)
-    return _plain_message(diff)
-
-
 def generate_diff(path_to_file1: str, path_to_file2: str):
     """Generate message different two files."""
     with open(path_to_file1) as first_file:
@@ -81,4 +76,5 @@ def generate_diff(path_to_file1: str, path_to_file2: str):
     with open(path_to_file2) as second_file:
         second_data = json.load(second_file)
 
-    return _generate_diff_from_dicts(first_data, second_data)
+    diff = dict_diff(first_data, second_data)
+    return _plain_message(diff)

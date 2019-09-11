@@ -1,6 +1,8 @@
 # -*- coding:utf-8 -*-
 
-from gendiff.diff import _generate_diff_from_dicts, dict_diff
+import pytest
+
+from gendiff.diff import dict_diff, generate_diff
 
 
 def test_dict_diff():
@@ -16,16 +18,15 @@ def test_dict_diff():
     }
 
 
-def test_message_from_diff():
-    first = {'host': 'hexlet.io', 'timeout': 50, 'proxy': '123.234.53.22'}
-    second = {'timeout': 20, 'verbose': True, 'host': 'hexlet.io'}
-    result = _generate_diff_from_dicts(first, second)
-    expected = """{
-    host: hexlet.io
-  + timeout: 20
-  - timeout: 50
-  - proxy: 123.234.53.22
-  + verbose: True
-}"""
+def test_message_from_diff(expected_plain):
+    diff = generate_diff(
+        'tests/fixtures/before.json',
+        'tests/fixtures/after.json',
+    )
+    assert diff.split('\n') == expected_plain
 
-    assert result.split('\n') == expected.split('\n')
+
+@pytest.fixture
+def expected_plain(request):
+    with open('tests/fixtures/expected_plain.txt') as file:
+        yield file.read().splitlines()
