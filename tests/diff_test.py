@@ -101,31 +101,49 @@ def test_dict_diff():
     }
 
 
-def test_json_diff(expected_plain):
+def test_text_json_diff(expected_text_result):
     diff = generate_diff(
         'tests/fixtures/before.json',
         'tests/fixtures/after.json',
+        format_result='text',
     )
-    assert diff.split('\n') == expected_plain
+    assert diff.split('\n') == expected_text_result
 
 
-def test_yaml_diff(expected_plain):
+def test_yaml_diff(expected_text_result):
     diff = generate_diff(
         'tests/fixtures/before.yaml',
         'tests/fixtures/after.yaml',
+        format_result='text',
     )
-    assert diff.split('\n') == expected_plain
+    assert diff.split('\n') == expected_text_result
 
 
-def test_json_yaml_diff(expected_plain):
+def test_json_yaml_diff(expected_text_result):
     diff = generate_diff(
         'tests/fixtures/before.json',
         'tests/fixtures/after.yaml',
+        format_result='text',
     )
-    assert diff.split('\n') == expected_plain
+    assert diff.split('\n') == expected_text_result
+
+
+def test_plain_json_diff(expected_plain_result):
+    diff = generate_diff(
+        'tests/fixtures/before.json',
+        'tests/fixtures/after.json',
+        format_result='plain',
+    )
+    assert sorted(diff.split('\n')) == sorted(expected_plain_result)
 
 
 @pytest.fixture
-def expected_plain():
+def expected_text_result():
+    with open('tests/fixtures/expected_text.txt') as file:
+        yield file.read().splitlines()
+
+
+@pytest.fixture
+def expected_plain_result():
     with open('tests/fixtures/expected_plain.txt') as file:
         yield file.read().splitlines()

@@ -1,22 +1,22 @@
 # -*- coding:utf-8 -*-
 
-"""Module with renderers from diff dict."""
+"""Module with renderers from diff_ast."""
 from gendiff.nodetypes import ADDED, CHANGED, PARENT, REMOVED, UNCHANGED
 
 
-def plain(diff):
-    """Plain message diff from dict_diff function result."""
+def format_ast(diff_ast):
+    """Test message diff from diff_ast function result."""
     return '{{\n{lines}\n}}'.format(
-        lines=_plain_message_lines(diff),
+        lines=_message_lines(diff_ast),
     )
 
 
-def _plain_message_lines(diff, depth=0):
+def _message_lines(diff_ast, depth=0):
     lines = []
-    for key in sorted(diff.keys()):
-        node = diff[key]
+    for key in sorted(diff_ast.keys()):
+        node = diff_ast[key]
         if node['type'] == PARENT:
-            children = _plain_message_lines(node['children'], depth=depth + 1)
+            children = _message_lines(node['children'], depth=depth + 1)
             line = '    {prefix}{key}: {{\n{children}\n    {prefix}}}'.format(
                 children=children,
                 key=key,
