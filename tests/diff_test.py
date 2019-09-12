@@ -3,18 +3,101 @@
 import pytest
 
 from gendiff.diff import dict_diff, generate_diff
+from gendiff.nodetypes import ADDED, CHANGED, PARENT, REMOVED, UNCHANGED
 
 
 def test_dict_diff():
-    first = {'host': 'hexlet.io', 'timeout': 50, 'proxy': '123.234.53.22'}
-    second = {'timeout': 20, 'verbose': True, 'host': 'hexlet.io'}
+    first = {
+        'common': {
+            'setting1': 'Value 1',
+            'setting2': '200',
+            'setting3': True,
+            'setting6': {
+                'key': 'value',
+            },
+        },
+        'group1': {
+            'baz': 'bas',
+            'foo': 'bar',
+        },
+        'group2': {
+            'abc': '12345',
+        },
+        'test': 'test',
+        'foo': 'bar',
+    }
+    second = {
+        'common': {
+            'setting1': 'Value 1',
+            'setting3': True,
+            'setting4': 'blah blah',
+            'setting5': {
+                'key5': 'value5',
+            },
+        },
+        'group1': {
+            'foo': 'bar',
+            'baz': 'bars',
+        },
+        'group3': {
+            'fee': '100500',
+        },
+        'test': 'test',
+        'foo': 'baz',
+    }
     diff = dict_diff(first, second)
 
     assert diff == {
-        'added': {'verbose': True},
-        'removed': {'proxy': '123.234.53.22'},
-        'changed': {'timeout': {'new': 20, 'old': 50}},
-        'unchanged': {'host': 'hexlet.io'},
+        'common': {
+            'type': PARENT,
+            'children': {
+                'setting1': {
+                    'type': UNCHANGED,
+                    'value': 'Value 1',
+                },
+                'setting2': {
+                    'type': REMOVED,
+                    'value': '200',
+                },
+                'setting3': {
+                    'type': UNCHANGED,
+                    'value': True,
+                },
+                'setting4': {
+                    'type': ADDED,
+                    'value': 'blah blah',
+                },
+                'setting5': {
+                    'type': ADDED,
+                    'value': {'key5': 'value5'},
+                },
+                'setting6': {
+                    'type': REMOVED,
+                    'value': {'key': 'value'},
+                },
+            },
+        },
+        'group1': {
+            'type': PARENT,
+            'children': {
+                'baz': {
+                    'type': CHANGED,
+                    'value': 'bars',
+                    'oldValue': 'bas',
+                },
+                'foo': {'type': UNCHANGED, 'value': 'bar'},
+            },
+        },
+        'group2': {
+            'type': REMOVED,
+            'value': {'abc': '12345'},
+        },
+        'group3': {
+            'type': ADDED,
+            'value': {'fee': '100500'},
+        },
+        'test': {'type': UNCHANGED, 'value': 'test'},
+        'foo': {'type': CHANGED, 'value': 'baz', 'oldValue': 'bar'},
     }
 
 
@@ -43,6 +126,6 @@ def test_json_yaml_diff(expected_plain):
 
 
 @pytest.fixture
-def expected_plain(request):
+def expected_plain():
     with open('tests/fixtures/expected_plain.txt') as file:
         yield file.read().splitlines()
