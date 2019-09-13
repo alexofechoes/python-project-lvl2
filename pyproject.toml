@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "alexofechoes_gendiff"
-version = "0.1.0"
+version = "0.3.0"
 description = "Gendiff - hexlet second project"
 authors = ["Alexander Bukharin <alexawm182@gmail.com>"]
 packages = [
