@@ -9,7 +9,7 @@ PARENT = 'parent'
 
 
 def build_ast(first, second):
-    """Diff between first and second dicts."""
+    """Generate ast diff between first and second dicts."""
     first_keys = first.keys()
     second_keys = second.keys()
 

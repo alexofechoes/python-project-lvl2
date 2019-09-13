@@ -1,20 +1,20 @@
 # -*- coding:utf-8 -*-
 
-"""Render facade module."""
+"""Facade for ast formatters."""
 from gendiff.formatters import json, plain, text
 
 formats = {
-    'json': lambda ast: json.format_ast(ast),
-    'plain': lambda ast: plain.format_ast(ast),
-    'text': lambda ast: text.format_ast(ast),
+    'json': json.format_ast,
+    'plain': plain.format_ast,
+    'text': text.format_ast,
 }
 
 
-def format_ast(diff_ast, result_format):
-    """Format diff_ast in result format."""
+def format_ast(ast, result_format):
+    """Format from ast to result format."""
     if result_format not in formats:
         raise AttributeError(
             'Result format {format} not supported'.format(format=result_format),
         )
     format_func = formats[result_format]
-    return format_func(diff_ast)
+    return format_func(ast)

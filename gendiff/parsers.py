@@ -11,19 +11,21 @@ parsers = {
 }
 
 
-def parse(data_format, raw_data):
+def parse(file_extension: str, raw_data: str):
     """Parse raw text data to dict."""
-    parse_func = _create_parse_func(data_format)
+    parse_func = _create_parse_func(file_extension)
     return parse_func(raw_data)
 
 
-def _create_parse_func(data_format):
-    if data_format == 'yml':
-        data_format = 'yaml'
+def _create_parse_func(file_extension: str):
+    if file_extension == 'yml':
+        file_extension = 'yaml'
 
-    if data_format not in parsers:
+    if file_extension not in parsers:
         raise AttributeError(
-            'Format {format} not supported'.format(format=data_format),
+            'File extension {file_extension} not supported'.format(
+                file_extension=file_extension,
+            ),
         )
 
-    return parsers[data_format]
+    return parsers[file_extension]

@@ -1,28 +1,28 @@
 # -*- coding:utf-8 -*-
 
-"""Plain formatter from diff ast."""
+"""Plain formatter from ast."""
 from gendiff.ast import ADDED, CHANGED, PARENT, REMOVED
 
 
-def format_ast(diff):
-    """Plain message diff from diff_ast function result."""
-    return _message_lines(diff)
+def format_ast(ast):
+    """Format ast to plain string."""
+    return _build_message(ast)
 
 
-def _message_lines(diff, parents=None):
+def _build_message(ast, parents=None):
     if not parents:
         parents = []
 
-    lines = []
-    for key in sorted(diff.keys()):
-        node = diff[key]
+    message_lines = []
+    for key in sorted(ast.keys()):
+        node = ast[key]
 
         if node['type'] == PARENT:
-            lines.append(
-                _message_lines(node['children'], parents=parents + [key]),
+            message_lines.append(
+                _build_message(node['children'], parents=parents + [key]),
             )
         if node['type'] == CHANGED:
-            lines.append(
+            message_lines.append(
                 "Property '{key}' was changed. From '{old}' to '{new}'".format(
                     key=_get_path(parents, key),
                     old=_get_value(node['oldValue']),
@@ -30,17 +30,17 @@ def _message_lines(diff, parents=None):
                 ),
             )
         if node['type'] == ADDED:
-            lines.append(
+            message_lines.append(
                 "Property '{key_path}' was added with value: '{value}'".format(
                     key_path=_get_path(parents, key),
                     value=_get_value(node['value']),
                 ),
             )
         if node['type'] == REMOVED:
-            lines.append("Property '{key_path}' was removed".format(
+            message_lines.append("Property '{key_path}' was removed".format(
                 key_path=_get_path(parents, key),
             ))
-    return '\n'.join(lines)
+    return '\n'.join(message_lines)
 
 
 def _get_value(value):
