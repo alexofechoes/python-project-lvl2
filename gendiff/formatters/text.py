@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 
 """Text formatter from ast."""
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 from gendiff.ast import ADDED, CHANGED, PARENT, REMOVED, UNCHANGED
 
@@ -13,7 +13,7 @@ def format_ast(ast: Dict[str, Any]) -> str:
     )
 
 
-def _build_message(ast: Dict[str, Any], depth: Optional[int] = 0) -> str:
+def _build_message(ast: Dict[str, Any], depth: int = 0) -> str:
     message_lines = []
     for key in sorted(ast.keys()):
         node = ast[key]

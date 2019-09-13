@@ -2,7 +2,7 @@
 
 """Module for parsing raw_text files to dict."""
 import json
-from typing import Any, Callable, Dict
+from typing import Any, Dict
 
 import yaml
 
@@ -18,7 +18,7 @@ def parse(file_extension: str, raw_data: str) -> Dict[str, Any]:
     return parse_func(raw_data)
 
 
-def _create_parse_func(file_extension: str) -> Callable[[str], Dict[str, Any]]:
+def _create_parse_func(file_extension: str):
     if file_extension == 'yml':
         file_extension = 'yaml'
 

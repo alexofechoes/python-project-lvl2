@@ -9,3 +9,6 @@ test:
 
 test-with-coverage:
 	poetry run pytest --cov=gendiff tests  --cov-report xml
+
+analize:
+	poetry run mypy gendiff
