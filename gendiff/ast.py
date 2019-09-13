@@ -1,6 +1,8 @@
 # -*- coding:utf-8 -*-
 
 """Module for create ast diff."""
+from typing import Any, Dict
+
 ADDED = 'added'
 REMOVED = 'removed'
 CHANGED = 'changed'
@@ -8,7 +10,7 @@ UNCHANGED = 'unchanged'
 PARENT = 'parent'
 
 
-def build_ast(first, second):
+def build_ast(first: Dict[str, Any], second: Dict[str, Any]) -> Dict[str, Any]:
     """Generate ast diff between first and second dicts."""
     first_keys = first.keys()
     second_keys = second.keys()

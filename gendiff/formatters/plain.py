@@ -1,15 +1,20 @@
 # -*- coding:utf-8 -*-
 
 """Plain formatter from ast."""
+from typing import Any, Dict, List, Optional
+
 from gendiff.ast import ADDED, CHANGED, PARENT, REMOVED
 
 
-def format_ast(ast):
+def format_ast(ast: Dict[str, Any]) -> str:
     """Format ast to plain string."""
     return _build_message(ast)
 
 
-def _build_message(ast, parents=None):
+def _build_message(
+    ast: Dict[str, Any],
+    parents: Optional[List[str]] = None,
+) -> str:
     if not parents:
         parents = []
 
@@ -43,11 +48,11 @@ def _build_message(ast, parents=None):
     return '\n'.join(message_lines)
 
 
-def _get_value(value):
-    if isinstance(value, dict):
+def _get_value(value: Any) -> str:
+    if isinstance(value, (dict, list)):
         return 'complex value'
-    return value
+    return str(value)
 
 
-def _get_path(parents, key):
+def _get_path(parents: List[str], key: str) -> str:
     return '.'.join(parents + [key])

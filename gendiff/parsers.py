@@ -2,22 +2,23 @@
 
 """Module for parsing raw_text files to dict."""
 import json
+from typing import Any, Callable, Dict
 
 import yaml
 
 parsers = {
-    'json': lambda data: json.loads(data),
-    'yaml': lambda data: yaml.safe_load(data),
+    'json': json.loads,
+    'yaml': yaml.safe_load,
 }
 
 
-def parse(file_extension: str, raw_data: str):
+def parse(file_extension: str, raw_data: str) -> Dict[str, Any]:
     """Parse raw text data to dict."""
     parse_func = _create_parse_func(file_extension)
     return parse_func(raw_data)
 
 
-def _create_parse_func(file_extension: str):
+def _create_parse_func(file_extension: str) -> Callable[[str], Dict[str, Any]]:
     if file_extension == 'yml':
         file_extension = 'yaml'
 

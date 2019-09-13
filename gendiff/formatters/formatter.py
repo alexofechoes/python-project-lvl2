@@ -1,6 +1,8 @@
 # -*- coding:utf-8 -*-
 
 """Facade for ast formatters."""
+from typing import Any, Dict
+
 from gendiff.formatters import json, plain, text
 
 formats = {
@@ -10,7 +12,7 @@ formats = {
 }
 
 
-def format_ast(ast, result_format):
+def format_ast(ast: Dict[str, Any], result_format: str) -> str:
     """Format from ast to result format."""
     if result_format not in formats:
         raise AttributeError(
