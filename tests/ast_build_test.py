@@ -1,12 +1,10 @@
 # -*- coding:utf-8 -*-
 
-import pytest
-
-from gendiff.diff import dict_diff, generate_diff
+from gendiff.diff import dict_diff
 from gendiff.nodetypes import ADDED, CHANGED, PARENT, REMOVED, UNCHANGED
 
 
-def test_dict_diff():
+def test_ast_build():
     first = {
         'common': {
             'setting1': 'Value 1',
@@ -99,51 +97,3 @@ def test_dict_diff():
         'test': {'type': UNCHANGED, 'value': 'test'},
         'foo': {'type': CHANGED, 'value': 'baz', 'oldValue': 'bar'},
     }
-
-
-def test_text_json_diff(expected_text_result):
-    diff = generate_diff(
-        'tests/fixtures/before.json',
-        'tests/fixtures/after.json',
-        format_result='text',
-    )
-    assert diff.split('\n') == expected_text_result
-
-
-def test_yaml_diff(expected_text_result):
-    diff = generate_diff(
-        'tests/fixtures/before.yaml',
-        'tests/fixtures/after.yaml',
-        format_result='text',
-    )
-    assert diff.split('\n') == expected_text_result
-
-
-def test_json_yaml_diff(expected_text_result):
-    diff = generate_diff(
-        'tests/fixtures/before.json',
-        'tests/fixtures/after.yaml',
-        format_result='text',
-    )
-    assert diff.split('\n') == expected_text_result
-
-
-def test_plain_json_diff(expected_plain_result):
-    diff = generate_diff(
-        'tests/fixtures/before.json',
-        'tests/fixtures/after.json',
-        format_result='plain',
-    )
-    assert sorted(diff.split('\n')) == sorted(expected_plain_result)
-
-
-@pytest.fixture
-def expected_text_result():
-    with open('tests/fixtures/expected_text.txt') as file:
-        yield file.read().splitlines()
-
-
-@pytest.fixture
-def expected_plain_result():
-    with open('tests/fixtures/expected_plain.txt') as file:
-        yield file.read().splitlines()
