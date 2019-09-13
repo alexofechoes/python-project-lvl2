@@ -1,7 +1,6 @@
 # -*- coding:utf-8 -*-
 
-from gendiff.diff import dict_diff
-from gendiff.nodetypes import ADDED, CHANGED, PARENT, REMOVED, UNCHANGED
+from gendiff.ast import ADDED, CHANGED, PARENT, REMOVED, UNCHANGED, build_ast
 
 
 def test_ast_build():
@@ -43,7 +42,7 @@ def test_ast_build():
         'test': 'test',
         'foo': 'baz',
     }
-    diff = dict_diff(first, second)
+    diff = build_ast(first, second)
 
     assert diff == {
         'common': {

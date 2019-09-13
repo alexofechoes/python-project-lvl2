@@ -3,7 +3,7 @@
 """Module with renderers from diff_ast."""
 import json
 
-from gendiff.nodetypes import PARENT
+from gendiff.ast import PARENT
 
 
 def format_ast(diff_ast):

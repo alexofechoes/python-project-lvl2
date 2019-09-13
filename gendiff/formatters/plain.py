@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 
 """Plain formatter from diff ast."""
-from gendiff.nodetypes import ADDED, CHANGED, PARENT, REMOVED
+from gendiff.ast import ADDED, CHANGED, PARENT, REMOVED
 
 
 def format_ast(diff):
