@@ -4,20 +4,20 @@
 import json
 from typing import Any, Dict
 
-from gendiff.ast import PARENT
+from gendiff import ast
 
 
-def format_ast(ast: Dict[str, Any]) -> str:
+def format_ast(ast_diff: Dict[str, Any]) -> str:
     """Format ast to json string."""
-    filtered_ast = _build_dict(ast)
+    filtered_ast = _build_dict(ast_diff)
     return json.dumps(filtered_ast)
 
 
-def _build_dict(ast: Dict[str, Any]) -> Dict[str, Any]:
+def _build_dict(ast_diff: Dict[str, Any]) -> Dict[str, Any]:
     result = {}
-    for key, node in ast.items():
-        if node['type'] == PARENT:
-            result[key] = _build_dict(node['children'])
+    for key, node in ast_diff.items():
+        if node[ast.TYPE] == ast.PARENT:
+            result[key] = _build_dict(node[ast.CHILDREN])
         else:
             result[key] = node
     return result

@@ -33,7 +33,7 @@
     "baz": {
       "type": "changed",
       "value": "bars",
-      "oldValue": "bas"
+      "old_value": "bas"
     },
     "foo": {
       "type": "unchanged",

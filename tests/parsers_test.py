@@ -19,7 +19,7 @@ def test_json_parse():
         'proxy': '123.234.53.22',
     }
 
-    assert parsers.parse('json', json_data) == expected
+    assert parsers.parse_json(json_data) == expected
 
 
 def test_yaml_parse():
@@ -34,10 +34,4 @@ def test_yaml_parse():
         'proxy': '123.234.53.22',
     }
 
-    assert parsers.parse('yaml', yaml_data) == expected
-    assert parsers.parse('yml', yaml_data) == expected
-
-
-def test_not_supported_format():
-    with pytest.raises(AttributeError):
-        parsers.parse('blablaformat', 'blabla')
+    assert parsers.parse_yaml(yaml_data) == expected

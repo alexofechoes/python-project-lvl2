@@ -3,6 +3,10 @@
 """Module for create ast diff."""
 from typing import Any, Dict
 
+TYPE = 'type'
+CHILDREN = 'children'
+VALUE = 'value'
+OLD_VALUE = 'old_value'
 ADDED = 'added'
 REMOVED = 'removed'
 CHANGED = 'changed'
@@ -20,31 +24,33 @@ def build_ast(first: Dict[str, Any], second: Dict[str, Any]) -> Dict[str, Any]:
     common_keys = first_keys & second_keys
 
     added = {
-        key: {'type': ADDED, 'value': second[key]}
+        key: {TYPE: ADDED, VALUE: second[key]}
         for key in add_keys
     }
     removed = {
-        key: {'type': REMOVED, 'value': first[key]}
+        key: {TYPE: REMOVED, VALUE: first[key]}
         for key in remove_keys
     }
 
     common = {}
     for key in common_keys:
-        if first[key] == second[key]:
+        first_item = first[key]
+        second_item = second[key]
+        if first_item == second_item:
             common[key] = {
-                'type': UNCHANGED,
-                'value': second[key],
+                TYPE: UNCHANGED,
+                VALUE: second_item,
             }
-        elif isinstance(first[key], dict) and isinstance(second[key], dict):
+        elif isinstance(first_item, dict) and isinstance(second_item, dict):
             common[key] = {
-                'type': PARENT,
-                'children': build_ast(first[key], second[key]),
+                TYPE: PARENT,
+                CHILDREN: build_ast(first_item, second_item),
             }
         else:
             common[key] = {
-                'type': CHANGED,
-                'value': second[key],
-                'oldValue': first[key],
+                TYPE: CHANGED,
+                VALUE: second_item,
+                OLD_VALUE: first_item,
             }
 
     return {**common, **added, **removed}

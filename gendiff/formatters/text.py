@@ -3,54 +3,56 @@
 """Text formatter from ast."""
 from typing import Any, Dict
 
-from gendiff.ast import ADDED, CHANGED, PARENT, REMOVED, UNCHANGED
+from gendiff import ast
+
+_SYMBOLS = {
+    ast.ADDED: '+',
+    ast.REMOVED: '-',
+    ast.UNCHANGED: ' ',
+}
 
 
-def format_ast(ast: Dict[str, Any]) -> str:
-    """Format ast to text string."""
+def format_ast(ast_diff: Dict[str, Any]) -> str:
+    """Format ast_diff to text string."""
     return '{{\n{message}\n}}'.format(
-        message=_build_message(ast),
+        message=_build_message(ast_diff),
     )
 
 
-def _build_message(ast: Dict[str, Any], depth: int = 0) -> str:
+def _build_message(ast_diff: Dict[str, Any], depth: int = 0) -> str:
     message_lines = []
-    for key in sorted(ast.keys()):
-        node = ast[key]
-        if node['type'] == PARENT:
-            children = _build_message(node['children'], depth=depth + 1)
+    for key, node in sorted(ast_diff.items(), key=lambda item: item[0]):
+        node_type = node[ast.TYPE]
+        if node_type == ast.PARENT:
+            children = _build_message(node[ast.CHILDREN], depth=depth + 1)
             line = '    {indent}{key}: {{\n{children}\n    {indent}}}'.format(
                 children=children,
                 key=key,
                 indent=_get_indent(depth),
             )
-        elif node['type'] == CHANGED:
+        elif node_type == ast.CHANGED:
             line = '{added}\n{removed}'.format(
-                added=_get_message(ADDED, key, node['value'], depth),
-                removed=_get_message(REMOVED, key, node['oldValue'], depth),
+                added=_get_message(ast.ADDED, key, node[ast.VALUE], depth),
+                removed=_get_message(
+                    ast.REMOVED,
+                    key,
+                    node[ast.OLD_VALUE],
+                    depth,
+                ),
             )
         else:
-            line = _get_message(node['type'], key, node['value'], depth)
+            line = _get_message(node_type, key, node[ast.VALUE], depth)
         message_lines.append(line)
     return '\n'.join(message_lines)
 
 
 def _get_message(node_type: str, key: str, value: Any, depth: int) -> str:
     return '{indent}  {symbol} {key}: {value}'.format(
-        symbol=_get_symbol_by_type(node_type),
+        symbol=_SYMBOLS.get(node_type, ' '),
         key=key,
         value=_get_value(value, depth + 1),
         indent=_get_indent(depth),
     )
-
-
-def _get_symbol_by_type(node_type: str) -> str:
-    symbol_by_type = {
-        ADDED: '+',
-        REMOVED: '-',
-        UNCHANGED: ' ',
-    }
-    return symbol_by_type.get(node_type, ' ')
 
 
 def _get_value(value: Any, depth: int):

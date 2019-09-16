@@ -42,9 +42,8 @@ def test_ast_build():
         'test': 'test',
         'foo': 'baz',
     }
-    diff = build_ast(first, second)
 
-    assert diff == {
+    expected = {
         'common': {
             'type': PARENT,
             'children': {
@@ -80,7 +79,7 @@ def test_ast_build():
                 'baz': {
                     'type': CHANGED,
                     'value': 'bars',
-                    'oldValue': 'bas',
+                    'old_value': 'bas',
                 },
                 'foo': {'type': UNCHANGED, 'value': 'bar'},
             },
@@ -94,5 +93,7 @@ def test_ast_build():
             'value': {'fee': '100500'},
         },
         'test': {'type': UNCHANGED, 'value': 'test'},
-        'foo': {'type': CHANGED, 'value': 'baz', 'oldValue': 'bar'},
+        'foo': {'type': CHANGED, 'value': 'baz', 'old_value': 'bar'},
     }
+
+    assert build_ast(first, second) == expected

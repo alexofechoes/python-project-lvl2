@@ -6,27 +6,12 @@ from typing import Any, Dict
 
 import yaml
 
-parsers = {
-    'json': json.loads,
-    'yaml': yaml.safe_load,
-}
+
+def parse_json(data: str) -> Dict[str, Any]:
+    """Parse data from json format to dict."""
+    return json.loads(data)
 
 
-def parse(file_extension: str, raw_data: str) -> Dict[str, Any]:
-    """Parse raw text data to dict."""
-    parse_func = _create_parse_func(file_extension)
-    return parse_func(raw_data)
-
-
-def _create_parse_func(file_extension: str):
-    if file_extension == 'yml':
-        file_extension = 'yaml'
-
-    if file_extension not in parsers:
-        raise AttributeError(
-            'File extension {file_extension} not supported'.format(
-                file_extension=file_extension,
-            ),
-        )
-
-    return parsers[file_extension]
+def parse_yaml(data: str) -> Any:
+    """Parse data from yaml format to dict."""
+    return yaml.safe_load(data)
